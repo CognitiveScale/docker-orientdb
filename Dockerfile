@@ -19,11 +19,11 @@ RUN apt-get -y install git ant
 ENV ORIENTDB_VERSION 1.7.8
 
 # Build OrientDB cleaning up afterwards
-RUN cd && \
+RUN cd  && \
     git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
     cd orientdb && \
     ant clean installg && \
-    mv /releases/orientdb-community-* /opt/orientdb && \
+    mv ~/releases/orientdb-community-* /opt/orientdb && \
     rm -rf /opt/orientdb/databases/* ~/orientdb
 
 # use supervisord to start orientdb
