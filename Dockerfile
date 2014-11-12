@@ -1,7 +1,7 @@
-# cognitivescale/orientdb-docker
+# c12e/orientdb
 
 FROM c12e/debian
-MAINTAINER CongnitiveScale (wsidney@c12e.com)
+MAINTAINER CongnitiveScale (bill@c12e.com)
 
 # Update repositry source list and install OrientDB dependencies
 RUN apt-get update && \
@@ -10,10 +10,10 @@ RUN apt-get update && \
 # supervisord
 ADD orientdb_supervisor.conf /etc/supervisor/supervisord.conf
 
-ENV ORIENTDB_VERSION 1.7.9
 # Build OrientDB cleaning up afterwards
 RUN cd && \
-    git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
+    git clone https://github.com/orientechnologies/orientdb.git \
+      --single-branch --depth 1 --branch 1.7.9 && \
     cd orientdb && \
     ant clean installg && \
     mv /releases/orientdb-community-* /opt/orientdb && \
