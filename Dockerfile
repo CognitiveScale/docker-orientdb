@@ -1,25 +1,34 @@
-# c12e/orientdb
+############################################################
+# Dockerfile to run an OrientDB (Graph) Container
+############################################################
 
 FROM c12e/debian
-MAINTAINER CongnitiveScale (bill@c12e.com)
+MAINTAINER CognitiveScale (bill@cognitivescale.com)
 
-# Update repositry source list and install OrientDB dependencies
-RUN apt-get update && \
-   apt-get install -y supervisor git ant
+# Update the default application repository sources list
+RUN apt-get update
 
-# supervisord
-ADD orientdb_supervisor.conf /etc/supervisor/supervisord.conf
+# Install supervisord
+RUN apt-get -y install supervisor
+RUN mkdir -p /var/log/supervisor
+
+# Install OrientDB dependencies
+# https://www.digitalocean.com/community/tutorials/how-to-install-and-use-orientdb-on-an-ubuntu-12-04-vps
+RUN apt-get -y install git ant
+
+ENV ORIENTDB_VERSION 1.7.9
 
 # Build OrientDB cleaning up afterwards
 RUN cd && \
-    git clone https://github.com/orientechnologies/orientdb.git \
-      --single-branch --depth 1 --branch 1.7.9 && \
+    git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
     cd orientdb && \
     ant clean installg && \
     mv /releases/orientdb-community-* /opt/orientdb && \
     rm -rf /opt/orientdb/databases/* ~/orientdb
 
-# Ports
+# use supervisord to start orientdb
+ADD supervisord.conf /etc/supervisor/supervisord.conf
+
 EXPOSE 2424
 EXPOSE 2480
 
