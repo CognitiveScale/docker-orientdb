@@ -10,7 +10,7 @@ RUN apt-get update
 
 # Install supervisord
 RUN apt-get -y install supervisor
-RUN mkdir -p /var/log/supervisor
+RUN mkdir -p /var/log/supervisor /data /logs
 
 # Install OrientDB dependencies
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-use-orientdb-on-an-ubuntu-12-04-vps
