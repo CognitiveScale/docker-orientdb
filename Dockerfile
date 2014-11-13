@@ -23,8 +23,9 @@ RUN cd  && \
     git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
     cd orientdb && \
     ant clean installg && \
-    mv ~/releases/orientdb-community-* /opt/orientdb && \
-    rm -rf /opt/orientdb/databases/* ~/orientdb
+    mv ~/releases/orientdb-community-* /opt/orientdb-${ORIENTDB_VERSION} && \
+    rm -rf /opt/orientdb-${ORIENTDB_VERSION}/databases/* ~/orientdb && \
+    ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb
 
 # use supervisord to start orientdb
 ADD supervisord.conf /etc/supervisor/supervisord.conf
