@@ -3,7 +3,7 @@ orientdb-docker
 
 A dockerfile for creating an orientdb image with :
 
-  - explicit orientdb version (1.7.9) 
+  - explicit orientdb version (2.0-M2) 
   - init by supervisord
   - config, databases and backup folders expected to be mounted as volumes
 
