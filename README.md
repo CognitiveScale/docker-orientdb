@@ -13,7 +13,11 @@ Running orientdb
 To run the image, run:
 
 ```bash
-docker run --name orientdb -d -v <config_path>:/opt/orientdb/config -v <databases_path>:/opt/orientdb/databases -v <backup_path>:/opt/orientdb/backup -p 2424 -p 2480 c12e/orientdb
+docker run --name orientdb -d \
+  -v <config_path>:/opt/orientdb/config \
+  -v <databases_path>:/opt/orientdb/databases \
+  -v <backup_path>:/opt/orientdb/backup \
+  -p 2424 -p 2480 c12e/orientdb
 ```
 
 The docker image contains a unconfigured orientdb installation and for running it you need to provide your own config folder from which OrientDB will read its startup settings.
@@ -38,12 +42,17 @@ With orientdb 1.7.9 we can now create ad-hoc backups by taking advantage of [the
 
   - Using the orientdb_backup data container that was created above:
     ```bash
-    docker run -i -t --volumes-from orientdb_config --volumes-from orientdb_backup c12e/orientdb ./backup.sh <dburl> <user> <password> /opt/orientdb/backup/<backup_file> [<type>]
+    docker run -i -t \
+      --volumes-from orientdb_config \
+      --volumes-from orientdb_backup c12e/orientdb \
+      ./backup.sh <dburl> <user> <password> /opt/orientdb/backup/<backup_file> [<type>]
     ```
 
   - Or using a host folder:
 
-    `docker run -i -t --volumes-from orientdb_config -v <host_backup_path>:/backup c12e/orientdb ./backup.sh <dburl> <user> <password> /backup/<backup_file> [<type>]`
+    `docker run -i -t \
+       --volumes-from orientdb_config \
+       -v <host_backup_path>:/backup c12e/orientdb ./backup.sh <dburl> <user> <password> /backup/<backup_file> [<type>]`
 
 Either way, when the backup completes you will have the backup file located outside of the OrientDB container and read for safekeeping.
 
@@ -52,8 +61,8 @@ Running the orientdb console
 
 ```bash
 docker run --rm -it \
-            --volumes-from orientdb_config \
-            --volumes-from orientdb_databases \
-            --volumes-from orientdb_backup \
-            c12e/orientdb \
-            /opt/orientdb/bin/console.sh
+  --volumes-from orientdb_config \
+  --volumes-from orientdb_databases \
+  --volumes-from orientdb_backup \
+  c12e/orientdb \
+  /opt/orientdb/bin/console.sh
