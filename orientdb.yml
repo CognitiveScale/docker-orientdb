@@ -1,0 +1,11 @@
+orientdb:
+    image: $registry/$service:$release
+    ports:
+        - 2424
+        - 2480
+    volumes:
+        - logs:/logs
+        - orientdb/data:/data
+        - orientdb/config:/opt/orientdb/config 
+        - orientdb/databases:/opt/orientdb/databases
+        - orientdb/backup:/opt/orientdb/backup
