@@ -2,16 +2,15 @@
 # Dockerfile to run an OrientDB (Graph) Container
 ############################################################
 
+ENV ORIENTDB_VERSION 2.0-M2
+
 FROM c12e/debian
 MAINTAINER CognitiveScale (bill@cognitivescale.com)
 
 # Update the default application repository sources list
-RUN apt-get update
-
-# Install OrientDB dependencies and supervisor
-RUN apt-get -y install git ant maven supervisor apt-utils
-
-ENV ORIENTDB_VERSION 2.0-M2
+# and Install OrientDB dependencies and supervisor
+RUN apt-get update && \
+    apt-get -y install git ant maven supervisor apt-utils
 
 # Build OrientDB cleaning up afterwards
 RUN mkdir /tmp/build && \
