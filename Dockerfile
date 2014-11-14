@@ -24,7 +24,7 @@ RUN cd  && \
     mvn assembly:assembly && \
     cd ~ && \
     mv ~/releases/orientdb-community-${ORIENTDB_VERSION} /opt && \
-    rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* ~/orientdb && \
+    rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* ~/orientdb ~/.m2 && \
     mv ~/orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
       /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
     ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb && \
