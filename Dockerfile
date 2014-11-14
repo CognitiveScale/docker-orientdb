@@ -14,7 +14,8 @@ RUN apt-get -y install git ant maven supervisor apt-utils
 ENV ORIENTDB_VERSION 2.0-M2
 
 # Build OrientDB cleaning up afterwards
-RUN cd  && \
+RUN mkdir /tmp/build && \
+    cd /tmp/build  && \
     git clone https://github.com/orientechnologies/orientdb.git \
       --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
     git clone https://github.com/orientechnologies/orientdb-lucene.git && \
@@ -22,13 +23,13 @@ RUN cd  && \
     ant clean installg && \
     cd ../orientdb-lucene && \
     mvn assembly:assembly && \
-    cd ~ && \
-    mv ~/releases/orientdb-community-${ORIENTDB_VERSION} /opt && \
-    rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* ~/orientdb ~/.m2 && \
-    mv ~/orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
+    mv /tmp/build/releases/orientdb-community-${ORIENTDB_VERSION} /opt && \
+    mv /tmp/build//orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
       /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
+    rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* && \
+    rm -rf  /tmp/build ~/.m2 && \
+    mkdir -p /var/log/supervisor /data /logs && \
     ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb && \
-    mkdir -p /var/log/supervisor /data /logs
 
 # use supervisord to start orientdb
 ADD supervisord.conf /etc/supervisor/supervisord.conf
