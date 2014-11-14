@@ -29,7 +29,7 @@ RUN mkdir /tmp/build && \
     rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* && \
     rm -rf  /tmp/build ~/.m2 && \
     mkdir -p /var/log/supervisor /data /logs && \
-    ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb && \
+    ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb 
 
 # use supervisord to start orientdb
 ADD supervisord.conf /etc/supervisor/supervisord.conf
