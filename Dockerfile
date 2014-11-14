@@ -2,10 +2,10 @@
 # Dockerfile to run an OrientDB (Graph) Container
 ############################################################
 
-ENV ORIENTDB_VERSION 2.0-M2
-
 FROM c12e/debian
 MAINTAINER CognitiveScale (bill@cognitivescale.com)
+
+ENV ORIENTDB_VERSION 2.0-M2
 
 # Update the default application repository sources list
 # and Install OrientDB dependencies and supervisor
@@ -23,7 +23,7 @@ RUN mkdir /tmp/build && \
     cd ../orientdb-lucene && \
     mvn assembly:assembly && \
     mv /tmp/build/releases/orientdb-community-${ORIENTDB_VERSION} /opt && \
-    mv /tmp/build//orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
+    mv /tmp/build/orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
       /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
     rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* && \
     rm -rf  /tmp/build ~/.m2 && \
