@@ -8,19 +8,15 @@ MAINTAINER CognitiveScale (bill@cognitivescale.com)
 # Update the default application repository sources list
 RUN apt-get update
 
-# Install supervisord
-RUN apt-get -y install supervisor
-RUN mkdir -p /var/log/supervisor /data /logs
-
-# Install OrientDB dependencies
-# https://www.digitalocean.com/community/tutorials/how-to-install-and-use-orientdb-on-an-ubuntu-12-04-vps
-RUN apt-get -y install git ant maven
+# Install OrientDB dependencies and supervisor
+RUN apt-get -y install git ant maven supervisor apt-utils
 
 ENV ORIENTDB_VERSION 2.0-M2
 
 # Build OrientDB cleaning up afterwards
 RUN cd  && \
-    git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
+    git clone https://github.com/orientechnologies/orientdb.git \
+      --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
     git clone https://github.com/orientechnologies/orientdb-lucene.git && \
     cd orientdb && \
     ant clean installg && \
@@ -31,7 +27,8 @@ RUN cd  && \
     rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* ~/orientdb && \
     mv ~/orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
       /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
-    ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb
+    ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb && \
+    mkdir -p /var/log/supervisor /data /logs
 
 # use supervisord to start orientdb
 ADD supervisord.conf /etc/supervisor/supervisord.conf
