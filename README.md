@@ -4,6 +4,7 @@ orientdb-docker
 A dockerfile for creating an orientdb image with :
 
   - explicit orientdb version (2.0-M2) 
+  - with the lucene plugin
   - init by supervisord
   - config, databases and backup folders expected to be mounted as volumes
 

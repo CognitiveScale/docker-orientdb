@@ -14,17 +14,23 @@ RUN mkdir -p /var/log/supervisor /data /logs
 
 # Install OrientDB dependencies
 # https://www.digitalocean.com/community/tutorials/how-to-install-and-use-orientdb-on-an-ubuntu-12-04-vps
-RUN apt-get -y install git ant
+RUN apt-get -y install git ant maven
 
 ENV ORIENTDB_VERSION 2.0-M2
 
 # Build OrientDB cleaning up afterwards
 RUN cd  && \
     git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
+    git clone https://github.com/orientechnologies/orientdb-lucene.git && \
     cd orientdb && \
     ant clean installg && \
-    mv ~/releases/orientdb-community-* /opt/orientdb-${ORIENTDB_VERSION} && \
-    rm -rf /opt/orientdb-${ORIENTDB_VERSION}/databases/* ~/orientdb && \
+    cd ../orientdb-lucene && \
+    mvn assembly:assembly && \
+    cd ~ && \
+    mv ~/releases/orientdb-community-${ORIENTDB_VERSION} /opt && \
+    rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* ~/orientdb && \
+    mv ~/orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
+      /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
     ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb
 
 # use supervisord to start orientdb
