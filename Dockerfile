@@ -31,7 +31,7 @@ RUN mkdir /tmp/build && \
     ln -s /opt/orientdb-community-${ORIENTDB_VERSION} /opt/orientdb 
 
 #volume
-VOLUME ['/data', 'logs']
+VOLUME ['/data', '/logs']
 
 EXPOSE 2424
 EXPOSE 2480
