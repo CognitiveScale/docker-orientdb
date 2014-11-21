@@ -5,7 +5,7 @@
 FROM c12e/debian
 MAINTAINER CognitiveScale (bill@cognitivescale.com)
 
-ENV ORIENTDB_VERSION 2.0-M2
+ENV ORIENTDB_VERSION 2.0-M3
 
 # Update the default application repository sources list
 # and Install OrientDB dependencies and supervisor
@@ -27,11 +27,11 @@ RUN mkdir /tmp/build && \
       /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
     rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* && \
     rm -rf  /tmp/build ~/.m2 && \
-    mkdir -p /var/log/supervisor /data /logs && \
-    ln -s /opt/orientdb-${ORIENTDB_VERSION} /opt/orientdb 
+    mkdir -p /var/log/supervisor && \
+    ln -s /opt/orientdb-community-${ORIENTDB_VERSION} /opt/orientdb 
 
-# use supervisord to start orientdb
-ADD supervisord.conf /etc/supervisor/supervisord.conf
+#volume
+VOLUME ['/data', 'logs']
 
 EXPOSE 2424
 EXPOSE 2480
@@ -40,4 +40,4 @@ EXPOSE 2480
 USER root
 
 # Default command when starting the container
-CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+CMD ["/opt/orientdb/bin/server.sh"]
