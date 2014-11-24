@@ -5,7 +5,7 @@
 FROM c12e/debian
 MAINTAINER CognitiveScale (bill@cognitivescale.com)
 
-ENV ORIENTDB_VERSION 2.0-M3
+ENV ORIENTDB_VERSION 2.0-M2
 
 # Update the default application repository sources list
 # and Install OrientDB dependencies and supervisor
@@ -15,9 +15,8 @@ RUN apt-get update && \
 # Build OrientDB cleaning up afterwards
 RUN mkdir /tmp/build && \
     cd /tmp/build  && \
-    git clone https://github.com/orientechnologies/orientdb.git \
-      --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
-    git clone https://github.com/orientechnologies/orientdb-lucene.git && \
+    git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
+    git clone https://github.com/orientechnologies/orientdb-lucene.git --single-branch --depth 1 --branch $ORIENTDB_VERSION&& \
     cd orientdb && \
     ant clean installg && \
     cd ../orientdb-lucene && \
