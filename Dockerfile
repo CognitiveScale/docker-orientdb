@@ -13,24 +13,30 @@ RUN apt-get update && \
     apt-get -y install git ant maven supervisor apt-utils
 
 # Build OrientDB cleaning up afterwards
-RUN mkdir /tmp/build && \
+ADD supervisord.conf /etc/supervisor/supervisord.conf
+
+# Install Binaries
+RUN mkdir -p /tmp/build /data /logs && \
     cd /tmp/build  && \
     git clone https://github.com/orientechnologies/orientdb.git --single-branch --depth 1 --branch $ORIENTDB_VERSION && \
     git clone https://github.com/orientechnologies/orientdb-lucene.git --single-branch --depth 1 --branch $ORIENTDB_VERSION&& \
     cd orientdb && \
-    ant clean installg && \
-    cd ../orientdb-lucene && \
-    mvn assembly:assembly && \
+    ant clean install && \
     mv /tmp/build/releases/orientdb-community-${ORIENTDB_VERSION} /opt && \
+    ln -s /opt/orientdb-community-${ORIENTDB_VERSION} /opt/orientdb && \
+    chmod a+x /opt/orientdb/bin/*.sh && \
+    cd /tmp/build/orientdb-lucene && \
+    mvn assembly:assembly && \
     mv /tmp/build/orientdb-lucene/target/orientdb-lucene-${ORIENTDB_VERSION}-dist.jar \
       /opt/orientdb-community-${ORIENTDB_VERSION}/plugins && \
-    rm -rf /opt/orientdb-community-${ORIENTDB_VERSION}/databases/* && \
-    rm -rf  /tmp/build ~/.m2 && \
-    mkdir -p /var/log/supervisor && \
-    ln -s /opt/orientdb-community-${ORIENTDB_VERSION} /opt/orientdb 
+    sed -i '/<users>/a <user resources="*" password="root" name="root"/>' /opt/orientdb/config/orientdb-server-config.xml && \
+    rm -rf  /tmp/build ~/.m2 
+
+ADD GratefulDeadConcerts.* /opt/orientdb/GratefulDeadConcerts/
+# <entry value="C:/temp/databases" name="server.database.path" />
 
 #volume
-VOLUME ['/data', '/logs']
+#VOLUME ['/data', '/logs']
 
 EXPOSE 2424
 EXPOSE 2480
@@ -39,4 +45,4 @@ EXPOSE 2480
 USER root
 
 # Default command when starting the container
-CMD ["/opt/orientdb/bin/server.sh"]
+CMD ["/usr/bin/supervisord"]
