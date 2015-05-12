@@ -3,7 +3,10 @@
 ############################################################
 
 FROM c12e/debian
-MAINTAINER CognitiveScale (bill@cognitivescale.com)
+MAINTAINER CognitiveScale.com
+
+ENV SERVICE_NAME=orientdb
+ADD supervisor.conf /etc/supervisor/conf.d/${SERVICE_NAME}.conf
 
 ENV ORIENTDB_VERSION 2.0-M2
 
@@ -11,9 +14,6 @@ ENV ORIENTDB_VERSION 2.0-M2
 # and Install OrientDB dependencies and supervisor
 RUN apt-get update && \
     apt-get -y install git ant maven supervisor apt-utils
-
-# Build OrientDB cleaning up afterwards
-ADD supervisord.conf /etc/supervisor/supervisord.conf
 
 # Install Binaries
 RUN mkdir -p /tmp/build /data /logs && \
@@ -45,4 +45,4 @@ EXPOSE 2480
 USER root
 
 # Default command when starting the container
-CMD ["/usr/bin/supervisord"]
+CMD ["/usr/bin/supervisord","-c","/etc/supervisor/supervisord.conf"]
